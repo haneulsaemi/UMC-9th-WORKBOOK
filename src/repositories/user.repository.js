@@ -101,3 +101,22 @@ export const getUserPreferencesByUserId = async (userId) => {
     conn.release();
   }
 };
+
+export async function getUserIdByEmail(email) {
+  const conn = await pool.getConnection();
+
+  const sql = "SELECT id FROM user WHERE email = ? LIMIT 1";
+  const [rows] = await (conn ?? pool).query(sql, [email]);
+  return rows.length ? rows[0].id : null;
+}
+
+/**
+ * 유저 존재 여부 확인
+ */
+export async function checkUserExists(id) {
+  const conn = await pool.getConnection();
+
+  const sql = "SELECT 1 FROM user WHERE id = ? LIMIT 1";
+  const [rows] = await (conn ?? pool).query(sql, [id]);
+  return rows.length > 0;
+}
