@@ -1,5 +1,5 @@
 export const responseFromReviews = (reviews) => {
-    console.log(reviews)
+    console.log("dto: ", reviews)
     return {
         data: reviews,
         pagination: {

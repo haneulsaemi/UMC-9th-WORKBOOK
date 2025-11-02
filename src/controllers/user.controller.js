@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import { bodyToUser } from "../dtos/user.dto.js";
 import { userSignUp } from "../services/user.service.js";
+import { listMyReviews } from "../services/review.service.js";
 
 export const handleUserSignUp = async (req, res, next) => {
   console.log("회원가입을 요청했습니다!");
@@ -17,4 +18,14 @@ export const startUserMission = async (req, res, next) => {
   const userMission = await challengeMission(bodyToUserMission(req.body));
   res.status(StatusCodes.OK).json({result: userMission})
   
+}
+
+export const handleListMyReviews = async (req, res, next) => {
+  console.log("내가 작성한 리뷰 목록을 요청했습니다.");
+  const reviews = await listMyReviews(
+      parseInt(req.params.userId),
+      typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+  );
+
+  res.status(StatusCodes.OK).json({result: reviews})
 }

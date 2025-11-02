@@ -34,3 +34,15 @@ export const getReviewById = async (id) => {
     
     return review ?? null;
 }
+
+export const getReviewByUserId = async (userId, cursor) => {
+    const review = prisma.review.findMany({
+        where:{
+            userId, id: { gt: cursor } 
+        },
+        orderBy: { id: "asc" },
+        take: 5,
+    })
+    console.log("repository: ", review)
+    return review;
+}

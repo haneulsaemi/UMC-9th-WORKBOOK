@@ -1,7 +1,7 @@
 import { getUserIdByEmail } from "../repositories/user.repository.js";
 import { checkStoreExists } from "../repositories/store.repository.js";
-import {addReview} from "../repositories/review.repository.js";
-import { responseFromReview } from "../dtos/review.dto.js";
+import { addReview, getReviewByUserId } from "../repositories/review.repository.js";
+import { responseFromReview, responseFromReviews } from "../dtos/review.dto.js";
 
 export const  createReview = async ({ email, storeId, body, score }) => {
   if (score != null && (score < 0 || score > 5)) {
@@ -25,4 +25,9 @@ export const  createReview = async ({ email, storeId, body, score }) => {
     
     const created = await addReview(userId.id, storeId, body, score);
     return responseFromReview(created);
+}
+
+export const listMyReviews = async (userId, cursor) => {
+    const reviews = await getReviewByUserId(userId, cursor);
+    return responseFromReviews(reviews);
 }
