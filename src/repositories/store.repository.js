@@ -15,3 +15,11 @@ export const getAllStoreReviews = async (storeId, cursor) =>{
 
     return reviews;
 }
+
+export const checkStoreExists = async (storeId) => {
+    const store = await prisma.store.findFirst({
+        select:{id:true},
+        where:{id:storeId},
+    })
+    return store !== null;
+}

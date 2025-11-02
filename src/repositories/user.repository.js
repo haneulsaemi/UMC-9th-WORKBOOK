@@ -45,3 +45,21 @@ export const getUserPreferencesByUserId = async (userId) => {
   })
   return preferences;
 };
+
+
+export const getUserIdByEmail = async (email) => {
+  const userId = prisma.user.findFirst({
+    select:{id:true},
+    where:{email:email}
+  })
+  console.log("getUserIdByEmail : " + userId)
+  return userId ?? null;
+}
+
+export const checkUserExists = async (id) => {
+  const result = prisma.user.findFirst({
+    select:{id:true},
+    where:{id:id},
+  })
+  return result !== null;
+}
