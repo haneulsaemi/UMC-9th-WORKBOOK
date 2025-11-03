@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { listStoreReviews } from "../services/store.service.js";
+import { listStoreReviews, listStoreMissions } from "../services/store.service.js";
 import { bodyToReview } from "../dtos/review.dto.js"; 
 import { createReview } from "../services/review.service.js";
 
@@ -16,6 +16,16 @@ export const handleListStoreReviews = async(req, res, next) => {
         parseInt(req.params.storeId),
         typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
     );
-    res.status(StatusCodes.OK).json(reviews)
+    res.status(StatusCodes.OK).json({ result: reviews })
 }
 
+export const handleListStoreMissions = async (req, res, next) => {
+    console.log("스토어 미션 목록을 요청했습니다!")
+    
+    const missions = await listStoreMissions(
+        parseInt(req.params.storeId),
+        typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+    );
+
+    res.status(StatusCodes.OK).json({ result: missions })
+}

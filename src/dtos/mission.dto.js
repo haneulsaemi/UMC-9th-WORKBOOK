@@ -21,3 +21,13 @@ export const responseFromMission = (mission) => {
     updatedAt: mission.updated_at ?? mission.updatedAt,
   };
 };
+
+export const responseFromMissions = (missions) => {
+    console.log("dto: ", missions)
+    return {
+        data: missions,
+        pagination: {
+            cursor: missions.length ? missions[missions.length -1].id : null,
+        }
+    }
+}
