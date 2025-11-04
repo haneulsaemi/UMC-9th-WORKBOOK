@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import cors from 'cors';
 import express from "express";
-import { handleUserSignUp, startUserMission, handleListMyReviews } from "./controllers/user.controller.js";
+import { handleUserSignUp, startUserMission, handleListMyReviews, handleListMyMissions } from "./controllers/user.controller.js";
 import { handleListStoreReviews, handleAddStoreReview, handleListStoreMissions } from "./controllers/store.controller.js"
 
 dotenv.config();
@@ -21,8 +21,8 @@ app.get('/', (req, res) => {
 app.post("/api/v1/users/signup", handleUserSignUp);
 app.post("/api/v1/users/:userId/mission/:missionId", startUserMission)
 app.get("/api/v1/users/:userId/reviews", handleListMyReviews)
-
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews)
+app.get("/api/v1/users/:userId/missions", handleListMyMissions)
 
 app.post("/api/v1/stores/:storeId/reviews", handleAddStoreReview)
 

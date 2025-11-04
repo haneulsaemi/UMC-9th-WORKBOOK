@@ -1,7 +1,8 @@
 import { getUserIdByEmail } from "../repositories/user.repository.js";
 import { checkStoreExists } from "../repositories/store.repository.js";
 import { getMissionById, addMission } from "../repositories/mission.repository.js";
-import { isMissionInProgress, startUserMission } from "../repositories/userMission.repository.js";
+import { isMissionInProgress, startUserMission, getMissionsByUserId } from "../repositories/userMission.repository.js";
+import { responseFromUserMissions } from "../dtos/userMission.dto.js"; 
 
 export const  challengeMission = async (data) => {
     console.log(data)
@@ -46,4 +47,9 @@ export const  challengeMission = async (data) => {
         updatedAt: started.updated_at,
       },
     };
+}
+
+export const listMyMissions = async (userId, cursor) => {
+  const missions = await getMissionsByUserId(userId, cursor);
+  return responseFromUserMissions(missions)
 }

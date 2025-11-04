@@ -38,3 +38,14 @@ export const startUserMission = async (userId, missionId) => {
     return result ?? null
 
 }
+
+export const getMissionsByUserId = async (userId, cursor) => {
+    const missions = await prisma.userMission.findMany({
+        where:{
+            userId, id: { gt: cursor } 
+        },
+        orderBy: { id: "asc" },
+        take: 5,
+    })
+    return missions;
+}

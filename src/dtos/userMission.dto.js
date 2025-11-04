@@ -22,3 +22,13 @@ export const responseFromUserMission = (userMission) => {
     updatedAt: userMission.updated_at ?? userMission.updatedAt,
   };
 };
+
+export const responseFromUserMissions = (userMission) => {
+    console.log("dto: ", userMission)
+    return {
+        data: userMission,
+        pagination: {
+            cursor: userMission.length ? userMission[userMission.length -1].id : null,
+        }
+    }
+}
