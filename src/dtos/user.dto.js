@@ -18,8 +18,8 @@ export const responseFromUser = ({user, preferences}) => {
     (preference) => preference.foodCategory.name
   )
     return{
-        email: user[0].email,
-        name: user[0].name,
+        email: user.email,
+        name: user.name,
         preferCategory: preferFoods
     };
 }

@@ -9,7 +9,7 @@ export const handleUserSignUp = async (req, res, next) => {
   console.log("body:", req.body); // 값이 잘 들어오나 확인하기 위한 테스트용
 
   const user = await userSignUp(bodyToUser(req.body));
-  res.status(StatusCodes.OK).json({ result: user });
+  res.status(StatusCodes.OK).success(user);
 };
 
 export const startUserMission = async (req, res, next) => {
@@ -17,7 +17,7 @@ export const startUserMission = async (req, res, next) => {
   console.log("body:", req.body);
 
   const userMission = await challengeMission(bodyToUserMission(req.body));
-  res.status(StatusCodes.OK).json({result: userMission})
+  res.status(StatusCodes.OK).success(userMission);
   
 }
 
@@ -28,7 +28,7 @@ export const handleListMyReviews = async (req, res, next) => {
       typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
   );
 
-  res.status(StatusCodes.OK).json({result: reviews})
+  res.status(StatusCodes.OK).success(reviews);
 }
 
 export const handleListMyMissions = async (req, res, next) => {
@@ -37,5 +37,5 @@ export const handleListMyMissions = async (req, res, next) => {
     parseInt(req.params.userId),
       typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
   )
-    res.status(StatusCodes.OK).json({result: missions})
+    res.status(StatusCodes.OK).success(missions);
 }
