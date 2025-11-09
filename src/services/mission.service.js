@@ -3,29 +3,25 @@ import { checkStoreExists } from "../repositories/store.repository.js";
 import { getMissionById, addMission } from "../repositories/mission.repository.js";
 import { isMissionInProgress, startUserMission, getMissionsByUserId } from "../repositories/userMission.repository.js";
 import { responseFromUserMissions } from "../dtos/userMission.dto.js"; 
+import { MissionAlreadyInProgressError, MissionNotFoundError, MissionStoreMismatchError } from "../errors.js";
 
 export const  challengeMission = async (data) => {
     console.log(data)
     const userId = await getUserIdByEmail(data.email);
     if (!userId) {
-        const error = new Error("User not found by email");
-        error.status = 404;
-        throw error;
+        throw new UserNotFoundError("User not found by email");
     }
 
     const missionRow = await getMissionById(data.missionId);
-    if (!missionRow) { const e = new Error("Mission not found"); e.status = 404; throw e; }
+    if (!missionRow) { throw MissionNotFoundError("Mission not found");}
     if (missionRow.store_id !== data.storeId) {
-        const e = new Error("Mission does not belong to the store");
-        e.status = 400; throw e;
+        throw new MissionStoreMismatchError("Mission does not belong to the store");
     }
 
     // 2) 이미 도전 중인지 확인
     const inProgress = await isMissionInProgress({ userId, missionId: missionRow.id });
     if (inProgress) {
-      const e = new Error("Mission already in progress");
-      e.status = 409; // Conflict
-      throw e;
+      throw new MissionAlreadyInProgressError("Mission already in progress");
     }
     // 3) 도전 시작
     const started = await startUserMission({ userId, missionId: missionRow.id });
