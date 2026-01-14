@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+// output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique(map: "email") @db.VarChar(256)
+  name          String   @db.VarChar(100)
+  gender        String   @db.VarChar(15)
+  birth         DateTime @db.Date
+  address       String   @db.VarChar(255)
+  detailAddress String?  @map("detail_address") @db.VarChar(256)
+  phoneNumber   String   @map("phone_number") @db.VarChar(15)
+
+  userFavorCategories UserFavorCategory[]
+
+  @@map("user")
+}
+model FoodCategory {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(100)
+
+  userFavorCategories UserFavorCategory[]
+
+  @@map("food_category")
+}
+
+model UserFavorCategory {
+  id             Int          @id @default(autoincrement())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int          @map("user_id")
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  foodCategoryId Int          @map("food_category_id")
+
+  @@index([foodCategoryId], map: "f_category_id")
+  @@index([userId], map: "user_id")
+  @@map("user_favor_category")
+}
+
+model Region {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(20)
+  createdAt DateTime? @map("created_at") @default(now()) @db.DateTime(6)
+  updatedAt DateTime? @map("updated_at") @default(now()) @db.DateTime(6)
+
+  @@map("region")
+}
+
+model Store {
+  id        Int       @id @default(autoincrement())
+  regionId  Int       @map("region_id")
+  name      String    @db.VarChar(50)
+  address   String?   @db.VarChar(150)
+  score     Float?    @db.Float
+  createdAt DateTime? @map("created_at") @default(now()) @db.DateTime(6)
+  updatedAt DateTime? @map("updated_at") @default(now()) @db.DateTime(6)
+
+
+  @@index([regionId], map: "region_id")
+  @@map("store")
+}
+
+model Mission {
+  id          Int       @id @default(autoincrement())
+  storeId     Int       @map("store_id")
+  reward      Int
+  deadline    DateTime  @db.DateTime(6)
+  missionSpec String    @map("mission_spec") @db.Text
+  createdAt   DateTime? @map("created_at") @default(now()) @db.DateTime(6)
+  updatedAt   DateTime? @map("updated_at") @default(now()) @db.DateTime(6)
+
+
+  @@index([storeId], map: "store_id")
+  @@map("mission")
+}
+
+model Review {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  storeId   Int       @map("store_id")
+  body      String?   @db.Text
+  score     Float?    @db.Float
+  createdAt DateTime? @map("created_at") @default(now()) @db.DateTime(6)
+  updatedAt DateTime? @map("updated_at") @default(now()) @db.DateTime(6)
+
+  @@index([userId], map: "user_id")
+  @@index([storeId], map: "store_id")
+  @@map("review")
+}
+
+model UserMission {
+  id         Int       @id @default(autoincrement())
+  userId     Int       @map("user_id")
+  missionId  Int       @map("mission_id")
+  status     String    @db.VarChar(15) // 필요 시 enum으로 전환 권장
+  createdAt  DateTime? @map("created_at") @default(now()) @db.DateTime(6)
+  updatedAt  DateTime? @map("updated_at") @default(now()) @db.DateTime(6)
+
+  @@index([userId], map: "user_id")
+  @@index([missionId], map: "mission_id")
+  @@map("user_mission")
+}
